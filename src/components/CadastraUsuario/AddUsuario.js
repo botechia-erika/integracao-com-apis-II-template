@@ -8,30 +8,30 @@ function AddUsuario(props) {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
 
-  const postNovoUsuario = () => {
+  const postNovoUsuario = async() => {
     const body = {
       name: nome,
       email
     };
-    axios
-      .post(
-        BASE_URL,
-        body,
-        {
-          headers: {
-            Authorization: AUTH_TOKEN
-          }
-        }
-      )
-      .then(() => {
-        alert("usuario criado!");
-        props.getUsuarios();
-        setEmail("");
-        setNome("");
-      })
-      .catch((err) => {
-        console.log("erro add", err.response);
-      });
+try {
+  axios
+  .post(
+    BASE_URL,
+    body,
+    {
+      headers: {
+        Authorization: AUTH_TOKEN
+      }
+    }
+  )
+  
+    alert("usuario criado!");
+    props.getUsuarios();
+    setEmail("");
+    setNome("");
+} catch (error) {
+  console.log(error.response.err)
+}
   };
 
   return (

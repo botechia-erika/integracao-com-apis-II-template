@@ -12,7 +12,7 @@ export const EditarUsuario = (props) => {
   const [name, setName] = useState("");
   const [editar, setEditar] = useState(false)
 
-
+// nessa aula refatoracaos sem uso d
   const getDadosUsuario = () => {
     axios
       .get(
@@ -23,6 +23,7 @@ export const EditarUsuario = (props) => {
           },
         }
       )
+      // res e a resposta que accede a resposta da api para utilizar somente data preciso usar .data
       .then((res) => {
         setUsuario(res.data);
         setEmail(res.data.email);
@@ -37,12 +38,13 @@ export const EditarUsuario = (props) => {
     getDadosUsuario();
   }, []);
 
-  const editaUsuario = () => {
+  const editaUsuario = async() => {
     const body = {
         name,
         email
       };
-      axios
+      try {
+        await axios
         .put(
           `${BASE_URL}/${usuario.id}`,
           body,
@@ -51,15 +53,20 @@ export const EditarUsuario = (props) => {
               Authorization: AUTH_TOKEN
             }
           }
-        )
-        .then(() => {
-          getDadosUsuario();
-          setEditar(!editar)
-        });
+        );
+        getDadosUsuario()
+        setEditar(!editar)
+     
+      } catch (error) {
+        console.log(error.response)
+        
+      }
   }
-
-  const deletarUsuario = () => {
-    axios
+ 
+  const deletarUsuario = async() => {
+    
+    try {
+     const deletar = await axios
       .delete(
         `${BASE_URL}/${usuario.id}`,
         {
@@ -68,14 +75,17 @@ export const EditarUsuario = (props) => {
           }
         }
       )
-      .then(() => {
-        alert("usuario removido");
-        // chama de novo o get usuarios pra atualizar a lista
-        props.getUsuarios();
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+        
+      alert('usuario removido com sucesso')
+   
+      // chama de novo a funcao para atualizar novamente a requisicao
+  
+      props.getDadosUsuario()
+        setEditar(editar)
+} catch (error) {
+      console.log(error.response)
+    }
+    
   };
 
 
